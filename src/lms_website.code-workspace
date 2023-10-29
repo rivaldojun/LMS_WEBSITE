@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../biristechwebsite-main/server/node_modules"
+		}
+	],
+	"settings": {}
+}
