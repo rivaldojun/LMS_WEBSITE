@@ -35,7 +35,7 @@
                                     <div class="card-body ">
                                         <p class="text-muted mb-0">Pour avoir une meilleur esperience d'apprentissage vueillez entrer vos informations</p>    
                                         <div class="row justify-content-center mt-4 px-sm-5  ">
-                                          <form id="userInfoForm">
+                                          <form id="userInfoForm" action="/souscription_form/<%= formation.id %>" method="post">
                                             <div class="form-group">
                                               <label for="userName">Nom :</label>
                                               <input type="text" class="form-control" id="userName">
@@ -45,7 +45,7 @@
                                               <input type="email" class="form-control" id="userEmail">
                                             </div>
                                             <div class="modal-footer">
-                                              <button type="button" class="btn btn-primary" id="saveUserInfo" onclick="window.location.href='/formation/<%= formation.id %>'">Enregistrer</button>
+                                              <button type="button" class="btn btn-primary" id="saveUserInfo" >Soumettre</button>
                                             </div>
                                           </form>
                                         </div>

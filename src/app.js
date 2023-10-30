@@ -40,11 +40,13 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 const transporter = nodemailer.createTransport({
-  service: 'your-email-service', // Par exemple, 'Gmail' ou utilisez un transport personnalisé
+  host: 'your-mail-server.com', // Remplacez par le serveur SMTP de votre e-mail
+  port: 587, // Port SMTP approprié
+  secure: false, // false pour le protocole SMTP, true pour SMTPS (SSL/TLS)
   auth: {
-      user: 'your-email@example.com', // Votre adresse e-mail
-      pass: 'your-email-password' // Mot de passe de votre adresse e-mail
-  }
+    user: 'info@lms-invention.com', // Votre adresse e-mail
+    pass: 'votre-mot-de-passe', // Mot de passe de votre adresse e-mail
+  },
 });
 
 // Gérer les soumissions de formulaire
@@ -101,13 +103,70 @@ app.post('/submit-offer', upload.single('fichiers'), (req, res) => {
   transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
           console.log(error);
-          res.render('confirmation_postul', {message: 'Erreur ',title:'Veuillez réessayer dans un moment' })
+          res.render('confirmation_postul', {message: 'Erreur du server',title:'Veuillez réessayer dans un moment' })
           
       } else {
           console.log('E-mail envoyé : ' + info.response);
           res.render('confirmation_postul', {message: 'Nous vous reviendront après analyse de votre dossier',title:'Votre dossier a été soumis avec succès' })
       }
   });
+});
+
+app.post('/souscription_conf/:id', async (req, res) => {
+  try {
+    const userName=req.body.userName
+    const userEmail=req.body.userEmail
+    const idconf = req.params.id
+
+    // Enregistrez les données dans la base de données à l'aide de Prisma
+    const souscription = await prisma.souscripconf.create({
+      data: {
+        name: userName,
+        email: userEmail,
+        idconf,
+      },
+    });
+
+    // Répondez avec un message de succès ou effectuez une redirection
+    res.render('confirmation_postul', {
+      message: 'Nous vous enverrons le lien de la conférence très prochainement',
+      title: 'Vous êtes désormais parmi les participants de cette conférence',
+    });
+  } catch (error) {
+    // Gérez les erreurs ici
+    console.error(error);
+    res.render('confirmation_postul', {
+      message: 'Erreur du serveur',
+      title: 'Veuillez réessayer dans un moment',
+    });
+  }
+});
+
+
+app.post('/souscription_form/:id', async (req, res) => {
+  try {
+    const userName = req.body.userName;
+    const userEmail = req.body.userEmail;
+    const id = req.params.id;
+
+    // Enregistrez les données dans la base de données à l'aide de Prisma
+    const souscription = await prisma.souscripformation.create({
+      data: {
+        name: userName,
+        email: userEmail
+      },
+    });
+
+    // Répondez avec une redirection vers la page de formation
+    res.redirect(`/formation/${id}`);
+  } catch (error) {
+    // Gérez les erreurs ici
+    console.error(error);
+    res.render('confirmation_postul', {
+      message: 'Erreur lors de la soumission du formulaire',
+      title: 'Veuillez réessayer dans un moment',
+    });
+  }
 });
 
 

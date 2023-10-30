@@ -12,17 +12,20 @@
 
 <body>
 <%- include('navbar.ejs', { currentPage: '' }) %>
-<div class="container" style="height: 370px;margin-top: 100px;">
+<div class="container" style="height: 570px;margin-top: 100px;">
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <div class="card ">
-                <div class="card-header text-center" style="font-size: 30px;color: blue;">
-                    Evenement ajouté
+                <div class="mt-4" style="align-items: center;display: flex;justify-content: center;">
+                <img class="" src="../assets/news.png" style="height: 200px;width: 200px;">
+            </div>
+                <div class="card-header text-center" style="font-size: 40px;color: blue;background-color: white;">
+                    <%= title %>
                 </div>
                 <div class="card-body content-center text-center justify-content-center items-center">
-                    <p class="content-center text-center">Merci votre evenement a été créé avec succès.</p>
+                    <p class="content-center text-center"><%= message %></p>
                     <br>
-                    <a href="/addeventsadmin" class="btn btn-primary">Retourner a l'accueil admin</a>
+                    <a href="/" class="btn btn" style="border-radius: 50px;background-color: blue;color: white;">Retourner a l'accueil</a>
                 </div>
             </div>
         </div>

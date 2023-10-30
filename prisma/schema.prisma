@@ -20,6 +20,18 @@ model Registration {
   password  String
 }
 
+model souscripconf {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  idconf  Int
+}
+
+model souscripformation {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+}
 model Newsletter{
   id  Int @id @default(autoincrement())
   email  String @unique
