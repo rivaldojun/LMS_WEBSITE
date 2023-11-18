@@ -18,7 +18,7 @@ app.use(session({
 }));
 
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "src/views"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({origin:true,methods:["GET", "POST", "PUT", "DELETE"],credentials:true,}));
 app.use(morgan('combine'))
@@ -40,12 +40,12 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 const transporter = nodemailer.createTransport({
-  host: 'your-mail-server.com', // Remplacez par le serveur SMTP de votre e-mail
-  port: 587, // Port SMTP approprié
-  secure: false, // false pour le protocole SMTP, true pour SMTPS (SSL/TLS)
+  host: 'mail.lms-invention.com', // Remplacez par le serveur SMTP de votre e-mail
+  port: 465, // Port SMTP approprié
+  secure: true, // false pour le protocole SMTP, true pour SMTPS (SSL/TLS)
   auth: {
     user: 'info@lms-invention.com', // Votre adresse e-mail
-    pass: 'votre-mot-de-passe', // Mot de passe de votre adresse e-mail
+    pass: 'LMSINV@info23', // Mot de passe de votre adresse e-mail
   },
 });
 
@@ -57,19 +57,20 @@ app.post('/submit-form', (req, res) => {
   const message = req.body.message;
 
   const mailOptions = {
-      from: 'your-email@example.com',
-      to: 'recipient-email@example.com', // Adresse e-mail du destinataire
-      subject: subject,
-      text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`
+    from: 'info@lms-invention.com',
+    to: 'info@lms-invention.com', // Adresse e-mail du destinataire
+    subject: subject,
+    html: `Name: ${name}<br>Email: <a href="mailto:${email}">${email}</a><br>Message: ${message}`
   };
+  
 
   transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
           console.log(error);
-          res.render('confirmation_postul', {message: 'Erreur ',title:'Veuillez réessayer dans un moment' })
+          res.render('confirmation_postul', {message: 'Erreur ',title:'Veuillez réessayer dans un moment',image:'../assets/wrong.jfif' })
       } else {
           console.log('Email sent: ' + info.response);
-          res.render('confirmation_postul', {message: 'Nous vous reviendront dans les délai dès que possible',title:'Votre message a été soumis avec succès' })
+          res.render('confirmation_postul', {message: 'Nous vous reviendront dans les délai dès que possible',title:'Votre message a été soumis avec succès',image:'../assets/newsletter.jfif'})
       }
   });
 });
@@ -83,11 +84,11 @@ app.post('/submit-offer', upload.single('fichiers'), (req, res) => {
   const filePath = req.file ? req.file.path : null; // Chemin du fichier téléchargé
 
   const mailOptions = {
-      from: 'your-email@example.com',
-      to: 'recipient-email@example.com', // Adresse e-mail du destinataire
+      from: 'info@lms-invention.com',
+      to: 'info@lms-invention.com', // Adresse e-mail du destinataire
       subject: 'Nouvelle soumission de formulaire',
       text: `
-      Titre:Pour le poste ${titre}
+      Titre:Pour le poste de ${titre}
       Nom: De la part de ${name}
       Email: ${email}
       Message: ${message}
@@ -103,11 +104,11 @@ app.post('/submit-offer', upload.single('fichiers'), (req, res) => {
   transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
           console.log(error);
-          res.render('confirmation_postul', {message: 'Erreur du server',title:'Veuillez réessayer dans un moment' })
+          res.render('confirmation_postul', {message: 'Erreur du server',title:'Veuillez réessayer dans un moment',image:'../assets/wrong.jfif' })
           
       } else {
           console.log('E-mail envoyé : ' + info.response);
-          res.render('confirmation_postul', {message: 'Nous vous reviendront après analyse de votre dossier',title:'Votre dossier a été soumis avec succès' })
+          res.render('confirmation_postul', {message: 'Nous vous reviendront après analyse de votre dossier',title:'Votre dossier a été soumis avec succès',image:'../assets/newsletter.jfif' })
       }
   });
 });
@@ -117,6 +118,7 @@ app.post('/souscription_conf/:id', async (req, res) => {
     const userName=req.body.userName
     const userEmail=req.body.userEmail
     const idconf = req.params.id
+    const subscribeToNotifications = req.body.notif === 'on'; 
 
     // Enregistrez les données dans la base de données à l'aide de Prisma
     const souscription = await prisma.souscripconf.create({
@@ -124,6 +126,7 @@ app.post('/souscription_conf/:id', async (req, res) => {
         name: userName,
         email: userEmail,
         idconf,
+        sub:subscribeToNotifications
       },
     });
 
@@ -138,6 +141,8 @@ app.post('/souscription_conf/:id', async (req, res) => {
     res.render('confirmation_postul', {
       message: 'Erreur du serveur',
       title: 'Veuillez réessayer dans un moment',
+      image:'../assets/wrong.jfif'
+      
     });
   }
 });
@@ -148,12 +153,15 @@ app.post('/souscription_form/:id', async (req, res) => {
     const userName = req.body.userName;
     const userEmail = req.body.userEmail;
     const id = req.params.id;
+    const subscribeToNotifications = req.body.notif === 'on'; 
 
     // Enregistrez les données dans la base de données à l'aide de Prisma
     const souscription = await prisma.souscripformation.create({
       data: {
         name: userName,
-        email: userEmail
+        email: userEmail,
+        sub:subscribeToNotifications
+
       },
     });
 
@@ -165,6 +173,7 @@ app.post('/souscription_form/:id', async (req, res) => {
     res.render('confirmation_postul', {
       message: 'Erreur lors de la soumission du formulaire',
       title: 'Veuillez réessayer dans un moment',
+      image:'../assets/wrong.jfif'
     });
   }
 });
@@ -182,7 +191,7 @@ app.post('/newsletter', async (req, res) => {
 
   // Si l'abonné existe déjà, renvoyer une réponse appropriée
   if (existingSubscriber) {
-    return res.render('newsletter_msg',{message: 'Cet adresse mail '+email+ ' est deja abonne a notre newsletter',title:'OOPS...' });
+    return res.render('newsletter_msg',{message: 'Cet adresse mail '+email+ ' est deja abonne a notre newsletter',title:'OOPS...',image:'../assets/wrong.jfif'});
   }
 
   // Si l'abonné n'existe pas, ajouter un nouvel enregistrement
@@ -193,7 +202,7 @@ app.post('/newsletter', async (req, res) => {
   });
 
   // Réponse de succès
-  res.render('newsletter_msg', {message: 'Vous recevrez prochainement le prochain numéro de notre newsletter.',title:'Merci de vous etes abonné' });
+  res.render('newsletter_msg', {message: 'Vous recevrez prochainement le prochain numéro de notre newsletter.',title:'Merci de vous etes abonné',image:'../assets/newsletter.jfif' });
 });
 
 

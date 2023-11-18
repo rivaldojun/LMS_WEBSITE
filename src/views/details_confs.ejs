@@ -63,7 +63,7 @@
       <div class="col-md-12">
         <div class="content-text">
           <h3 class="wow fadeInUp animated" data-wow-delay="0.8s" style="visibility: visible;-webkit-animation-delay: 0.8s; -moz-animation-delay: 0.8s; animation-delay: 0.8s;font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;"><%=conf.titre %></h3>
-          <p class="wow fadeInUp animated" data-wow-delay="1s" style="visibility: visible;-webkit-animation-delay: 1s; -moz-animation-delay: 1s; animation-delay: 1s;color: white"><%=conf.description %></p>
+          <p class="wow fadeInUp animated" data-wow-delay="1s" style="visibility: visible;-webkit-animation-delay: 1s; -moz-animation-delay: 1s; animation-delay: 1s;color: white"><%- conf.description %></p>
         </div>
       </div>
     </div>
@@ -92,8 +92,13 @@
                             <label for="userEmail">E-mail :</label>
                             <input type="email" class="form-control" id="userEmail">
                           </div>
+                          <div class="col-12" style="text-align: start;">
+                            <input type="checkbox" name="notif"  id="notif">
+                              <p>Acceptez vous de recevoir des notification reguliere ?</p>
+                            </div>
                           <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" id="saveUserInfo">Soumettre</button>
+                            
+                            <button type="submit" class="btn btn-primary" id="saveUserInfo">Soumettre</button>
                           </div>
                         </form>
                       </div>

@@ -26,7 +26,7 @@
         <% if (formations.length > 0) { %>
             <% formations.forEach(formation => { %>
                   <!-- Modal -->
-                  <div id="my-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                  <div id="my-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="height: fit-content">
                     <div class="modal-dialog  modal-dialog-centered justify-content-center " role="document">
                         <div class="modal-content  border-0">   
                             <div class="modal-body  p-0">
@@ -44,6 +44,10 @@
                                               <label for="userEmail">E-mail :</label>
                                               <input type="email" class="form-control" id="userEmail">
                                             </div>
+                                            <div class="col-12" style="text-align: start;">
+                                              <input type="checkbox" name="notif"  id="notif">
+                                                <p>Acceptez vous de recevoir des notification reguliere ?</p>
+                                              </div>
                                             <div class="modal-footer">
                                               <button type="button" class="btn btn-primary" id="saveUserInfo" >Soumettre</button>
                                             </div>

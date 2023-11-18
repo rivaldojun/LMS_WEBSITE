@@ -25,12 +25,14 @@ model souscripconf {
   name      String
   email     String   @unique
   idconf  Int
+  sub  Boolean
 }
 
 model souscripformation {
   id        Int      @id @default(autoincrement())
   name      String
   email     String   @unique
+  sub  Boolean
 }
 model Newsletter{
   id  Int @id @default(autoincrement())

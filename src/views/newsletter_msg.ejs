@@ -12,12 +12,12 @@
 
 <body>
 <%- include('navbar.ejs', { currentPage: '' }) %>
-<div class="container" style="height: 570px;margin-top: 100px;">
+<div class="container" style="height: 570px;margin-top: 50px;margin-bottom: 100px;">
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <div class="card ">
                 <div class="mt-4" style="align-items: center;display: flex;justify-content: center;">
-                <img class="" src="../assets/news.png" style="height: 200px;width: 200px;">
+                <img class="" src="<%= image %>" style="height: 200px;width: 200px;">
             </div>
                 <div class="card-header text-center" style="font-size: 40px;color: blue;background-color: white;">
                     <%= title %>
