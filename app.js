@@ -5,7 +5,6 @@ const morgan=require('morgan')
 const session = require('express-session');
 const path = require("path");
 const multer = require('multer');
-const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
@@ -389,7 +388,7 @@ app.post('/register', async (req, res) => {
   const func = req.body.function;
   const password = req.body.password;
   const confpassword = req.body.confpassword;
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = password
   // Effectuez ici la logique d'inscription en utilisant les données de req.body
   // Par exemple, enregistrez l'utilisateur dans la base de données
   if(password===confpassword){
@@ -432,7 +431,7 @@ app.post('/login', async (req, res) => {
   }
 
   // Vérifiez le mot de passe en comparant le mot de passe haché stocké avec le mot de passe fourni
-  const passwordMatch = await bcrypt.compare(password, user.password);
+  const passwordMatch = password==user.password;
 
   if (!passwordMatch) {
     // Le mot de passe ne correspond pas
